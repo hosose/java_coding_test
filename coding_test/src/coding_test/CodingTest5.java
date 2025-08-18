@@ -20,7 +20,7 @@ public class CodingTest5 {
 		int[] players = { 0, 0, 0, 10, 0, 12, 0, 15, 0, 1, 0, 1, 0, 0, 0, 5, 0, 0, 11, 0, 8, 0, 0, 0 };
 		int m = 5;
 		int k = 1;
-		System.out.println(solution(players, m, k));
+		System.out.println(solution2(players, m, k));
 	}
 
 	public static int solution(int[] players, int m, int k) {
@@ -48,4 +48,35 @@ public class CodingTest5 {
 		}
 		return answer;
 	}
+	
+//또 다른 답
+    public static int solution2(int[] players, int m, int k) {
+        int totalAdditions = 0;
+        int[] activeServers = new int[players.length + k];
+
+        for (int i = 0; i < players.length; i++) {
+            // 1. 현재 시간대에 필요한 서버 수 계산
+            int requiredServers = players[i] / m;
+            
+            // 2. 현재 가동 중인 서버 수 확인
+            int currentServers = activeServers[i];
+            
+            // 3. 필요한 서버 수가 현재 가동 중인 서버 수보다 많을 경우
+            if (requiredServers > currentServers) {
+                // 추가로 증설해야 하는 서버 수 계산
+                int newServers = requiredServers - currentServers;
+                
+                // 총 증설 횟수에 추가
+                totalAdditions += newServers;
+                
+                // 증설된 서버를 k 시간 동안 활성화 상태로 기록
+                for (int j = i; j < i + k; j++) {
+                    if (j < activeServers.length) {
+                        activeServers[j] += newServers;
+                    }
+                }
+            }
+        }
+        return totalAdditions;
+    }
 }
